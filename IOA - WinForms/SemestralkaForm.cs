@@ -20,6 +20,7 @@ using Microsoft.VisualBasic;
 
 namespace IOA___WinForms
 {
+
     public partial class SemestralkaForm : Form
     {
 
@@ -52,6 +53,14 @@ namespace IOA___WinForms
         private ForwardStarShortestPath aForwardStarShortestPath;
 
         private Clarke_Wrigth_Primary aClarkeWrigthPrimary;
+
+        private Node aPrimarySource;
+
+        private Routes aSelectedRoute;
+
+        private List<Routes> aResultRoutes;
+
+        private bool aDrawResults;
 
         public SemestralkaForm(ForwardStarSem parStar, DjikstraSem parDjikstra)
         {
@@ -110,6 +119,11 @@ namespace IOA___WinForms
 
             aClarkeWrigthPrimary = new Clarke_Wrigth_Primary(aForwardStarShortestPath);
 
+            aPrimarySource = new Node();
+
+            aSelectedRoute = new Routes();
+
+            aResultRoutes = new List<Routes>();
 
 
         }
@@ -133,6 +147,11 @@ namespace IOA___WinForms
             DrawLines(e.Graphics);
             DrawAdjacentEdges(e.Graphics);
             DrawConnectedInfo();
+
+            if (aDrawResults)
+            {
+                DrawResultsKlarke(e.Graphics, aSelectedRoute, aPrimarySource);
+            }
         }
 
 
@@ -169,6 +188,49 @@ namespace IOA___WinForms
 
 
             }
+
+        }
+
+        private void DrawResultsKlarke(Graphics graphics, Routes parRoute, Node parPrimarySource)
+        {
+
+            var test = aTestTree.Contains(aActualSizeRectangle);
+
+            var pen1 = new Pen(Brushes.White, 1f);
+
+            int tmpWidth = aZoomFactor * 5;
+
+
+
+            Node tmpOldNode = parPrimarySource;
+
+            pen1 = new Pen(parRoute.DrawnRouteColor, 1f);
+
+            if (parRoute != null && parRoute.Route != null)
+            {
+
+                foreach (var tmpNode in parRoute.Route)
+                {
+
+
+                    Vector2 tmpGraphCoordinatesInitial =
+                        ConvertCoordinatesToMouseCoordinates(tmpOldNode.Coordinates, tmpWidth);
+
+                    Vector2 tmpGraphCoordinatesEnd =
+                        ConvertCoordinatesToMouseCoordinates(tmpNode.Coordinates, tmpWidth);
+
+                    graphics.DrawLine(pen1, tmpGraphCoordinatesInitial.X, tmpGraphCoordinatesInitial.Y,
+                        tmpGraphCoordinatesEnd.X, tmpGraphCoordinatesEnd.Y);
+
+
+                    graphics.DrawLine(pen1, tmpGraphCoordinatesInitial.X, tmpGraphCoordinatesInitial.Y,
+                        tmpGraphCoordinatesEnd.X, tmpGraphCoordinatesEnd.Y);
+
+                    tmpOldNode = tmpNode;
+
+                }
+            }
+
 
         }
 
@@ -728,7 +790,7 @@ namespace IOA___WinForms
         {
             DialogBox testDialog = new DialogBox();
 
-            testDialog.LabelInfo.Text = "Súradnice Bodu";
+            testDialog.LabelInfo.Text = @"Súradnice Bodu";
             testDialog.TextBoxInput.Text = Math.Round(parCoordinates.X, 2) + " , " + Math.Round(parCoordinates.Y, 2);
 
             Vector2 tmpNewCoordinates = new Vector2();
@@ -851,7 +913,7 @@ namespace IOA___WinForms
                 if (aOldClicked != null)
                 {
                     aForwardStar.DeleteNode(aOldClicked);
-                
+
                     aTestTree.Delete(new RTree.Rectangle(aOldClicked.Coordinates.X, aOldClicked.Coordinates.Y,
                         aOldClicked.Coordinates.X, aOldClicked.Coordinates.Y, 0, 0), aOldClicked);
                     aOldClicked = null;
@@ -878,8 +940,173 @@ namespace IOA___WinForms
 
             labelAllNodesConnectedTrueFalse.Text = aForwardStarShortestPath.IsNetworkInterConnected().ToString();
 
-            aClarkeWrigthPrimary.CalculateCoefficients();
+
 
         }
+
+        private void buttonStartKlarke_Click(object sender, EventArgs e)
+        {
+
+            List<Routes> tmpRoutesList = new List<Routes>();
+
+            aDjikstraSem.CalculateDistanceMatrix(aForwardStarShortestPath);
+
+            labelConnNetworkClarkText.Text = aForwardStarShortestPath.IsNetworkInterConnected().ToString();
+
+
+
+            List<Node> tmpListNodes = aForwardStar.GetListNodes();
+            List<Node> tmpPrimarySources = new List<Node>();
+
+            bool tmpCustomersOkay = true;
+
+            int tmpPrimarySourceCounter = 0;
+            int tmpCustomersCounter = 0;
+
+            foreach (var tmpNode in tmpListNodes)
+            {
+                if (tmpNode.NodeType == NodeType.PrimarySource)
+                {
+                    tmpPrimarySourceCounter++;
+                    tmpPrimarySources.Add(tmpNode);
+                }
+
+                else if (tmpNode.NodeType == NodeType.Customer)
+                {
+                    tmpCustomersCounter++;
+                    if (tmpNode.Capacity <= 0)
+                    {
+                        tmpCustomersOkay = false;
+                    }
+                }
+                else
+                {
+                    tmpCustomersOkay = false;
+                }
+            }
+            if (tmpCustomersOkay)
+            {
+                labelCustomersText.Text = @"Customers: All Okay - Count: " + (tmpListNodes.Count - 1);
+            }
+            else if (tmpCustomersCounter == tmpListNodes.Count - 1)
+            {
+                labelCustomersText.Text = @"Customers: Missing " + (tmpListNodes.Count - 1 - tmpCustomersCounter);
+            }
+
+            if (tmpPrimarySourceCounter != 1)
+            {
+                labelPrimarySourceText.Text = @"Primary Source: " + @" Error, is " + tmpPrimarySourceCounter + @" must be 1";
+            }
+            else
+            {
+                labelPrimarySourceText.Text = @"Primary Source: " + tmpListNodes[0].Id;
+            }
+
+            if (tmpPrimarySourceCounter == 1 && tmpCustomersCounter == tmpListNodes.Count - 1 && tmpCustomersOkay && aForwardStarShortestPath.IsNetworkInterConnected() && numericUpDownK.Value > 0)
+            {
+                tmpRoutesList = aClarkeWrigthPrimary.CalculateCoefficients(tmpListNodes[0], Convert.ToInt32(Math.Round(numericUpDownK.Value, 0)));
+
+                aPrimarySource = tmpPrimarySources[0];
+
+                aDrawResults = true;
+
+                aResultRoutes = tmpRoutesList;
+            }
+
+
+
+            listBoxRoutes.Items.Clear();
+
+            for (int i = 0; i < tmpRoutesList.Count; i++)
+            {
+                string tmpRouteString = string.Empty;
+
+                tmpRouteString += tmpPrimarySources[0].Id;
+
+                for (int j = 0; j < tmpRoutesList[i].Route.Count; j++)
+                {
+                    tmpRouteString += " - " + tmpRoutesList[i].Route[j].Id;
+                }
+
+                tmpRouteString += " - " + tmpPrimarySources[0].Id + " ---------- Cost: " + tmpRoutesList[i].Capacity;
+
+                listBoxRoutes.Items.Add(tmpRouteString);
+
+            }
+
+
+
+        }
+
+        private void listBoxRoutes_DoubleClick(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void listBoxRoutes_Click(object sender, EventArgs e)
+        {
+            if (listBoxRoutes.SelectedItem != null)
+            {
+                aSelectedRoute = aResultRoutes[listBoxRoutes.SelectedIndex];
+            }
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "Txt File|*.txt";
+            saveFileDialog1.Title = "Save Text File";
+            saveFileDialog1.ShowDialog();
+
+            // If the file name is not an empty string open it for saving.
+            if (saveFileDialog1.FileName != "")
+            {
+                // Saves the Image via a FileStream created by the OpenFile method.
+                System.IO.FileStream fs =
+                    (System.IO.FileStream)saveFileDialog1.OpenFile();
+                // Saves the Image in the appropriate ImageFormat based upon the
+                // File type selected in the dialog box.
+                // NOTE that the FilterIndex property is one-based.
+             
+
+                aForwardStar.SaveFile(fs);
+
+                fs.Close();
+            }
+        }
+
+        private void buttonLoad_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Txt File|*.txt";
+            openFileDialog.Title = "Save Text File";
+            openFileDialog.ShowDialog();
+
+            // If the file name is not an empty string open it for saving.
+            if (openFileDialog.FileName != "")
+            {
+                // Saves the Image via a FileStream created by the OpenFile method.
+                System.IO.FileStream fs =
+                    (System.IO.FileStream)openFileDialog.OpenFile();
+                // Saves the Image in the appropriate ImageFormat based upon the
+                // File type selected in the dialog box.
+                // NOTE that the FilterIndex property is one-based.
+
+
+                aForwardStar.LoadFile(fs);
+
+                fs.Close();
+            }
+
+            aTestTree = new RTree<Node>();
+            
+            AddToRTree();
+
+            pictureBox1.Invalidate();
+
+        }
+
+
+        
     }
 }

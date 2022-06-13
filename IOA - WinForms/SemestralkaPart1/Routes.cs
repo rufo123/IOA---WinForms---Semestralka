@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace IOA___WinForms.SemestralkaPart1
@@ -13,6 +14,12 @@ namespace IOA___WinForms.SemestralkaPart1
         private List<Node> aRoute;
 
         private double aCapacity;
+
+        private Random aRandomGenerator;
+
+        private Random aRandomSeedGenerator;
+
+        private Color aDrawnRouteColor;
 
         public Node NodeAtStart
         {
@@ -38,12 +45,28 @@ namespace IOA___WinForms.SemestralkaPart1
             set => aCapacity = value;
         }
 
+        public Color DrawnRouteColor
+        {
+            get => aDrawnRouteColor;
+            set => aDrawnRouteColor = value;
+        }
+
         public Routes(Node parANodeAtStart, Node parANodeAtEnd, List<Node> parARoute, double parACapacity)
         {
             aNodeAtStart = parANodeAtStart;
             aNodeAtEnd = parANodeAtEnd;
             aRoute = parARoute;
             aCapacity = parACapacity;
+
+            aRandomSeedGenerator = new Random();
+            aRandomGenerator = new Random(aRandomSeedGenerator.Next());
+
+            aDrawnRouteColor = Color.FromArgb(aRandomGenerator.Next(255), aRandomGenerator.Next(255), aRandomGenerator.Next(255));
+        }
+
+        public Routes()
+        {
+
         }
     }
 }

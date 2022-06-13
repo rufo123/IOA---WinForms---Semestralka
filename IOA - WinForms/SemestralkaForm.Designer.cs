@@ -53,14 +53,30 @@ namespace IOA___WinForms
             this.buttonShortestPath = new System.Windows.Forms.Button();
             this.labelAllNodesConnected = new System.Windows.Forms.Label();
             this.labelAllNodesConnectedTrueFalse = new System.Windows.Forms.Label();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPageVisualizer = new System.Windows.Forms.TabPage();
+            this.tabPageClark = new System.Windows.Forms.TabPage();
+            this.numericUpDownK = new System.Windows.Forms.NumericUpDown();
+            this.labelCapacity = new System.Windows.Forms.Label();
+            this.buttonStartKlarke = new System.Windows.Forms.Button();
+            this.labelCustomersText = new System.Windows.Forms.Label();
+            this.labelPrimarySourceText = new System.Windows.Forms.Label();
+            this.labelConnNetworkClarkText = new System.Windows.Forms.Label();
+            this.listBoxRoutes = new System.Windows.Forms.ListBox();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonLoad = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxNodeInfo.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPageVisualizer.SuspendLayout();
+            this.tabPageClark.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownK)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.Location = new System.Drawing.Point(265, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(280, 15);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(800, 800);
             this.pictureBox1.TabIndex = 0;
@@ -72,7 +88,7 @@ namespace IOA___WinForms
             // 
             // buttonDraw
             // 
-            this.buttonDraw.Location = new System.Drawing.Point(59, 88);
+            this.buttonDraw.Location = new System.Drawing.Point(59, 67);
             this.buttonDraw.Name = "buttonDraw";
             this.buttonDraw.Size = new System.Drawing.Size(75, 23);
             this.buttonDraw.TabIndex = 1;
@@ -82,7 +98,7 @@ namespace IOA___WinForms
             // 
             // textBoxSize
             // 
-            this.textBoxSize.Location = new System.Drawing.Point(45, 59);
+            this.textBoxSize.Location = new System.Drawing.Point(45, 38);
             this.textBoxSize.Name = "textBoxSize";
             this.textBoxSize.Size = new System.Drawing.Size(100, 23);
             this.textBoxSize.TabIndex = 2;
@@ -90,7 +106,7 @@ namespace IOA___WinForms
             // labelSize
             // 
             this.labelSize.AutoSize = true;
-            this.labelSize.Location = new System.Drawing.Point(82, 36);
+            this.labelSize.Location = new System.Drawing.Point(82, 15);
             this.labelSize.Name = "labelSize";
             this.labelSize.Size = new System.Drawing.Size(27, 15);
             this.labelSize.TabIndex = 3;
@@ -102,7 +118,7 @@ namespace IOA___WinForms
             this.listBoxNodeInfo.ItemHeight = 15;
             this.listBoxNodeInfo.Items.AddRange(new object[] {
             "dasdas"});
-            this.listBoxNodeInfo.Location = new System.Drawing.Point(34, 431);
+            this.listBoxNodeInfo.Location = new System.Drawing.Point(34, 410);
             this.listBoxNodeInfo.Name = "listBoxNodeInfo";
             this.listBoxNodeInfo.Size = new System.Drawing.Size(178, 154);
             this.listBoxNodeInfo.TabIndex = 4;
@@ -112,7 +128,7 @@ namespace IOA___WinForms
             // 
             // textBoxMouseCoordinates
             // 
-            this.textBoxMouseCoordinates.Location = new System.Drawing.Point(32, 388);
+            this.textBoxMouseCoordinates.Location = new System.Drawing.Point(32, 367);
             this.textBoxMouseCoordinates.Name = "textBoxMouseCoordinates";
             this.textBoxMouseCoordinates.Size = new System.Drawing.Size(178, 23);
             this.textBoxMouseCoordinates.TabIndex = 5;
@@ -120,7 +136,7 @@ namespace IOA___WinForms
             // labelMouseCoordinates
             // 
             this.labelMouseCoordinates.AutoSize = true;
-            this.labelMouseCoordinates.Location = new System.Drawing.Point(69, 318);
+            this.labelMouseCoordinates.Location = new System.Drawing.Point(69, 297);
             this.labelMouseCoordinates.Name = "labelMouseCoordinates";
             this.labelMouseCoordinates.Size = new System.Drawing.Size(110, 15);
             this.labelMouseCoordinates.TabIndex = 6;
@@ -132,7 +148,7 @@ namespace IOA___WinForms
             this.listBoxSelectedNode.ItemHeight = 15;
             this.listBoxSelectedNode.Items.AddRange(new object[] {
             "dasdas"});
-            this.listBoxSelectedNode.Location = new System.Drawing.Point(32, 614);
+            this.listBoxSelectedNode.Location = new System.Drawing.Point(32, 593);
             this.listBoxSelectedNode.Name = "listBoxSelectedNode";
             this.listBoxSelectedNode.Size = new System.Drawing.Size(178, 154);
             this.listBoxSelectedNode.TabIndex = 7;
@@ -149,7 +165,7 @@ namespace IOA___WinForms
             this.groupBoxNodeInfo.Controls.Add(this.labelInfoNode);
             this.groupBoxNodeInfo.Controls.Add(this.textBoxNodeCapac);
             this.groupBoxNodeInfo.Controls.Add(this.textBoxNodeCoords);
-            this.groupBoxNodeInfo.Location = new System.Drawing.Point(13, 132);
+            this.groupBoxNodeInfo.Location = new System.Drawing.Point(13, 111);
             this.groupBoxNodeInfo.Name = "groupBoxNodeInfo";
             this.groupBoxNodeInfo.Size = new System.Drawing.Size(246, 230);
             this.groupBoxNodeInfo.TabIndex = 8;
@@ -236,7 +252,7 @@ namespace IOA___WinForms
             // 
             // buttonConnected
             // 
-            this.buttonConnected.Location = new System.Drawing.Point(1169, 88);
+            this.buttonConnected.Location = new System.Drawing.Point(1189, 87);
             this.buttonConnected.Name = "buttonConnected";
             this.buttonConnected.Size = new System.Drawing.Size(75, 23);
             this.buttonConnected.TabIndex = 9;
@@ -247,7 +263,7 @@ namespace IOA___WinForms
             // labelStartNode
             // 
             this.labelStartNode.AutoSize = true;
-            this.labelStartNode.Location = new System.Drawing.Point(1083, 23);
+            this.labelStartNode.Location = new System.Drawing.Point(1103, 22);
             this.labelStartNode.Name = "labelStartNode";
             this.labelStartNode.Size = new System.Drawing.Size(83, 15);
             this.labelStartNode.TabIndex = 10;
@@ -256,7 +272,7 @@ namespace IOA___WinForms
             // labelEndNode
             // 
             this.labelEndNode.AutoSize = true;
-            this.labelEndNode.Location = new System.Drawing.Point(1083, 59);
+            this.labelEndNode.Location = new System.Drawing.Point(1103, 58);
             this.labelEndNode.Name = "labelEndNode";
             this.labelEndNode.Size = new System.Drawing.Size(79, 15);
             this.labelEndNode.TabIndex = 11;
@@ -264,7 +280,7 @@ namespace IOA___WinForms
             // 
             // buttonShortestPath
             // 
-            this.buttonShortestPath.Location = new System.Drawing.Point(1155, 161);
+            this.buttonShortestPath.Location = new System.Drawing.Point(1175, 160);
             this.buttonShortestPath.Name = "buttonShortestPath";
             this.buttonShortestPath.Size = new System.Drawing.Size(108, 23);
             this.buttonShortestPath.TabIndex = 12;
@@ -275,7 +291,7 @@ namespace IOA___WinForms
             // labelAllNodesConnected
             // 
             this.labelAllNodesConnected.AutoSize = true;
-            this.labelAllNodesConnected.Location = new System.Drawing.Point(1145, 204);
+            this.labelAllNodesConnected.Location = new System.Drawing.Point(1165, 203);
             this.labelAllNodesConnected.Name = "labelAllNodesConnected";
             this.labelAllNodesConnected.Size = new System.Drawing.Size(122, 15);
             this.labelAllNodesConnected.TabIndex = 13;
@@ -284,33 +300,162 @@ namespace IOA___WinForms
             // labelAllNodesConnectedTrueFalse
             // 
             this.labelAllNodesConnectedTrueFalse.AutoSize = true;
-            this.labelAllNodesConnectedTrueFalse.Location = new System.Drawing.Point(1181, 231);
+            this.labelAllNodesConnectedTrueFalse.Location = new System.Drawing.Point(1201, 230);
             this.labelAllNodesConnectedTrueFalse.Name = "labelAllNodesConnectedTrueFalse";
             this.labelAllNodesConnectedTrueFalse.Size = new System.Drawing.Size(63, 15);
             this.labelAllNodesConnectedTrueFalse.TabIndex = 14;
             this.labelAllNodesConnectedTrueFalse.Text = "Not Tested";
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPageVisualizer);
+            this.tabControl1.Controls.Add(this.tabPageClark);
+            this.tabControl1.Location = new System.Drawing.Point(1, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(1397, 824);
+            this.tabControl1.TabIndex = 15;
+            // 
+            // tabPageVisualizer
+            // 
+            this.tabPageVisualizer.Controls.Add(this.buttonLoad);
+            this.tabPageVisualizer.Controls.Add(this.buttonSave);
+            this.tabPageVisualizer.Controls.Add(this.groupBoxNodeInfo);
+            this.tabPageVisualizer.Controls.Add(this.labelAllNodesConnectedTrueFalse);
+            this.tabPageVisualizer.Controls.Add(this.buttonDraw);
+            this.tabPageVisualizer.Controls.Add(this.labelAllNodesConnected);
+            this.tabPageVisualizer.Controls.Add(this.textBoxSize);
+            this.tabPageVisualizer.Controls.Add(this.buttonShortestPath);
+            this.tabPageVisualizer.Controls.Add(this.labelEndNode);
+            this.tabPageVisualizer.Controls.Add(this.labelSize);
+            this.tabPageVisualizer.Controls.Add(this.labelStartNode);
+            this.tabPageVisualizer.Controls.Add(this.listBoxNodeInfo);
+            this.tabPageVisualizer.Controls.Add(this.buttonConnected);
+            this.tabPageVisualizer.Controls.Add(this.textBoxMouseCoordinates);
+            this.tabPageVisualizer.Controls.Add(this.labelMouseCoordinates);
+            this.tabPageVisualizer.Controls.Add(this.pictureBox1);
+            this.tabPageVisualizer.Controls.Add(this.listBoxSelectedNode);
+            this.tabPageVisualizer.Location = new System.Drawing.Point(4, 24);
+            this.tabPageVisualizer.Name = "tabPageVisualizer";
+            this.tabPageVisualizer.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageVisualizer.Size = new System.Drawing.Size(1389, 796);
+            this.tabPageVisualizer.TabIndex = 0;
+            this.tabPageVisualizer.Text = "Visualizer";
+            this.tabPageVisualizer.UseVisualStyleBackColor = true;
+            // 
+            // tabPageClark
+            // 
+            this.tabPageClark.Controls.Add(this.numericUpDownK);
+            this.tabPageClark.Controls.Add(this.labelCapacity);
+            this.tabPageClark.Controls.Add(this.buttonStartKlarke);
+            this.tabPageClark.Controls.Add(this.labelCustomersText);
+            this.tabPageClark.Controls.Add(this.labelPrimarySourceText);
+            this.tabPageClark.Controls.Add(this.labelConnNetworkClarkText);
+            this.tabPageClark.Controls.Add(this.listBoxRoutes);
+            this.tabPageClark.Location = new System.Drawing.Point(4, 24);
+            this.tabPageClark.Name = "tabPageClark";
+            this.tabPageClark.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageClark.Size = new System.Drawing.Size(1389, 796);
+            this.tabPageClark.TabIndex = 1;
+            this.tabPageClark.Text = "Clarke-Wrigth";
+            this.tabPageClark.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownK
+            // 
+            this.numericUpDownK.Location = new System.Drawing.Point(43, 122);
+            this.numericUpDownK.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.numericUpDownK.Name = "numericUpDownK";
+            this.numericUpDownK.Size = new System.Drawing.Size(120, 23);
+            this.numericUpDownK.TabIndex = 6;
+            // 
+            // labelCapacity
+            // 
+            this.labelCapacity.AutoSize = true;
+            this.labelCapacity.Location = new System.Drawing.Point(17, 124);
+            this.labelCapacity.Name = "labelCapacity";
+            this.labelCapacity.Size = new System.Drawing.Size(20, 15);
+            this.labelCapacity.TabIndex = 5;
+            this.labelCapacity.Text = "K: ";
+            // 
+            // buttonStartKlarke
+            // 
+            this.buttonStartKlarke.Location = new System.Drawing.Point(17, 158);
+            this.buttonStartKlarke.Name = "buttonStartKlarke";
+            this.buttonStartKlarke.Size = new System.Drawing.Size(75, 23);
+            this.buttonStartKlarke.TabIndex = 4;
+            this.buttonStartKlarke.Text = "Start";
+            this.buttonStartKlarke.UseVisualStyleBackColor = true;
+            this.buttonStartKlarke.Click += new System.EventHandler(this.buttonStartKlarke_Click);
+            // 
+            // labelCustomersText
+            // 
+            this.labelCustomersText.AutoSize = true;
+            this.labelCustomersText.Location = new System.Drawing.Point(17, 85);
+            this.labelCustomersText.Name = "labelCustomersText";
+            this.labelCustomersText.Size = new System.Drawing.Size(70, 15);
+            this.labelCustomersText.TabIndex = 3;
+            this.labelCustomersText.Text = "Customers: ";
+            // 
+            // labelPrimarySourceText
+            // 
+            this.labelPrimarySourceText.AutoSize = true;
+            this.labelPrimarySourceText.Location = new System.Drawing.Point(17, 51);
+            this.labelPrimarySourceText.Name = "labelPrimarySourceText";
+            this.labelPrimarySourceText.Size = new System.Drawing.Size(90, 15);
+            this.labelPrimarySourceText.TabIndex = 2;
+            this.labelPrimarySourceText.Text = "Primary Source:";
+            // 
+            // labelConnNetworkClarkText
+            // 
+            this.labelConnNetworkClarkText.AutoSize = true;
+            this.labelConnNetworkClarkText.Location = new System.Drawing.Point(17, 17);
+            this.labelConnNetworkClarkText.Name = "labelConnNetworkClarkText";
+            this.labelConnNetworkClarkText.Size = new System.Drawing.Size(119, 15);
+            this.labelConnNetworkClarkText.TabIndex = 1;
+            this.labelConnNetworkClarkText.Text = "Network Connected: ";
+            // 
+            // listBoxRoutes
+            // 
+            this.listBoxRoutes.FormattingEnabled = true;
+            this.listBoxRoutes.ItemHeight = 15;
+            this.listBoxRoutes.Location = new System.Drawing.Point(3, 444);
+            this.listBoxRoutes.Name = "listBoxRoutes";
+            this.listBoxRoutes.Size = new System.Drawing.Size(1365, 349);
+            this.listBoxRoutes.TabIndex = 0;
+            this.listBoxRoutes.Click += new System.EventHandler(this.listBoxRoutes_Click);
+            this.listBoxRoutes.DoubleClick += new System.EventHandler(this.listBoxRoutes_DoubleClick);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(1189, 267);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.TabIndex = 15;
+            this.buttonSave.Text = "Save";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // buttonLoad
+            // 
+            this.buttonLoad.Location = new System.Drawing.Point(1189, 318);
+            this.buttonLoad.Name = "buttonLoad";
+            this.buttonLoad.Size = new System.Drawing.Size(75, 23);
+            this.buttonLoad.TabIndex = 16;
+            this.buttonLoad.Text = "Load";
+            this.buttonLoad.UseVisualStyleBackColor = true;
+            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
             // 
             // SemestralkaForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ClientSize = new System.Drawing.Size(1318, 825);
-            this.Controls.Add(this.labelAllNodesConnectedTrueFalse);
-            this.Controls.Add(this.labelAllNodesConnected);
-            this.Controls.Add(this.buttonShortestPath);
-            this.Controls.Add(this.labelEndNode);
-            this.Controls.Add(this.labelStartNode);
-            this.Controls.Add(this.buttonConnected);
-            this.Controls.Add(this.groupBoxNodeInfo);
-            this.Controls.Add(this.listBoxSelectedNode);
-            this.Controls.Add(this.labelMouseCoordinates);
-            this.Controls.Add(this.textBoxMouseCoordinates);
-            this.Controls.Add(this.listBoxNodeInfo);
-            this.Controls.Add(this.labelSize);
-            this.Controls.Add(this.textBoxSize);
-            this.Controls.Add(this.buttonDraw);
-            this.Controls.Add(this.pictureBox1);
+            this.ClientSize = new System.Drawing.Size(1399, 825);
+            this.Controls.Add(this.tabControl1);
             this.KeyPreview = true;
             this.Name = "SemestralkaForm";
             this.Text = "SemestralkaForm";
@@ -318,8 +463,13 @@ namespace IOA___WinForms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxNodeInfo.ResumeLayout(false);
             this.groupBoxNodeInfo.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPageVisualizer.ResumeLayout(false);
+            this.tabPageVisualizer.PerformLayout();
+            this.tabPageClark.ResumeLayout(false);
+            this.tabPageClark.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownK)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -349,5 +499,17 @@ namespace IOA___WinForms
         private System.Windows.Forms.Button buttonShortestPath;
         private System.Windows.Forms.Label labelAllNodesConnected;
         private System.Windows.Forms.Label labelAllNodesConnectedTrueFalse;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPageVisualizer;
+        private System.Windows.Forms.TabPage tabPageClark;
+        private System.Windows.Forms.Label labelCustomersText;
+        private System.Windows.Forms.Label labelPrimarySourceText;
+        private System.Windows.Forms.Label labelConnNetworkClarkText;
+        private System.Windows.Forms.ListBox listBoxRoutes;
+        private System.Windows.Forms.Button buttonStartKlarke;
+        private System.Windows.Forms.Label labelCapacity;
+        private System.Windows.Forms.NumericUpDown numericUpDownK;
+        private System.Windows.Forms.Button buttonLoad;
+        private System.Windows.Forms.Button buttonSave;
     }
 }

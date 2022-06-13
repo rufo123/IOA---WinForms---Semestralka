@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -47,6 +49,11 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
 
         public ForwardStarSem(int parCountOfNodes)
         {
+            Init(parCountOfNodes);
+        }
+
+        private void Init(int parCountOfNodes)
+        {
             aArrayPointers = new Dictionary<Node, int>(parCountOfNodes);
             aForwardStarItemList = new List<ForwardStarItemSem>();
             aDictionaryCoordinates = new Dictionary<int, Vector2>(parCountOfNodes);
@@ -63,8 +70,16 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
         {
 
             aUniqueNodeDictionary.TryAdd(parNode.Id, parNode);
-            aUniqueNodeDictionary.TryAdd(parTargetNode.Id, parTargetNode);
-            aForwardStarItemList.Add(new ForwardStarItemSem(aUniqueNodeDictionary[parTargetNode.Id], parDistance, aUniqueNodeDictionary[parNode.Id]));
+            if (parTargetNode != null)
+            {
+                aUniqueNodeDictionary.TryAdd(parTargetNode.Id, parTargetNode);
+                aForwardStarItemList.Add(new ForwardStarItemSem(aUniqueNodeDictionary[parTargetNode.Id], parDistance, aUniqueNodeDictionary[parNode.Id]));
+            }
+            else
+            {
+                aForwardStarItemList.Add(new ForwardStarItemSem(null, -1, aUniqueNodeDictionary[parNode.Id]));
+            }
+
         }
 
         public void AddAloneNode(Node parNode)
@@ -371,5 +386,96 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
         }
 
 
+        public void SaveFile(FileStream parFileStream)
+        {
+
+            using var sr = new StreamWriter(parFileStream);
+
+            foreach (var tmpNode in GetListNodes())
+            {
+                sr.WriteLine(tmpNode.Id + "," + tmpNode.Coordinates + "," + tmpNode.Capacity + "," + tmpNode.NodeType);
+            }
+
+            sr.WriteLine("; -- End Of First Section");
+
+
+            foreach (var tmpForwardStarItemSem in aForwardStarItemList)
+            {
+                string tmpEndNode = tmpForwardStarItemSem.EndNode == null ? "null" : tmpForwardStarItemSem.EndNode.Id.ToString();
+
+                sr.WriteLine(tmpForwardStarItemSem.InitialNode.Id + ", " + tmpEndNode + ", " + tmpForwardStarItemSem.Distance);
+            }
+
+            sr.Close();
+        }
+
+
+        public void LoadFile(FileStream parFileStream)
+        {
+
+            Init(9);
+
+            Dictionary<int, Node> tmpNodeHelperDictionary = new Dictionary<int, Node>();
+
+            using var sr = new StreamReader(parFileStream);
+
+            string tmpLine = string.Empty;
+            bool tmpReadingForwardItems = false;
+
+            while (!sr.EndOfStream)
+            {
+                tmpLine = sr.ReadLine();
+
+                if (tmpLine != null && tmpLine[0] == ';')
+                {
+                    tmpReadingForwardItems = true;
+                    continue;
+                }
+
+                if (tmpReadingForwardItems)
+                {
+                    string[] tmpSplitString = tmpLine.Split(',');
+
+                    Node tmpNode1 = tmpNodeHelperDictionary[Int32.Parse(tmpSplitString[0], CultureInfo.InvariantCulture)];
+
+                    string tmpNode2String = tmpSplitString[1].Trim();
+
+                    Node tmpNode2 = tmpNode2String == "null" ? null : tmpNodeHelperDictionary[Int32.Parse(tmpSplitString[1], CultureInfo.InvariantCulture)];
+
+                    Add(tmpNode1, tmpNode2, double.Parse(tmpSplitString[2], CultureInfo.InvariantCulture));
+                }
+                else
+                {
+                    if (tmpLine != null)
+                    {
+                        string[] tmpSplitString = tmpLine.Split(',');
+
+                        int tmpId = Int32.Parse(tmpSplitString[0], CultureInfo.InvariantCulture);
+
+                        string tmpCoordinatesX = tmpSplitString[1].Trim('<', ' ');
+                        string tmpCoordinatesY = tmpSplitString[2].Trim(' ', '>');
+
+                        Vector2 tmpCoords = new Vector2(float.Parse(tmpCoordinatesX, CultureInfo.InvariantCulture), float.Parse(tmpCoordinatesY, CultureInfo.InvariantCulture));
+
+                        double tmpCapacity = Double.Parse(tmpSplitString[3], CultureInfo.InvariantCulture);
+
+                        NodeType tmpNodeType = (NodeType)Enum.Parse(typeof(NodeType),tmpSplitString[4]);
+
+                        Node tmpNode = new Node(tmpNodeType, tmpCapacity, tmpId, tmpCoords);
+
+                        tmpNodeHelperDictionary.Add(tmpNode.Id, tmpNode);
+
+                        AddCoordinate(tmpNode.Id, tmpNode.Coordinates);
+
+                    }
+
+                }
+
+            }
+
+            Finalise();
+
+            sr.Close();
+        }
     }
 }

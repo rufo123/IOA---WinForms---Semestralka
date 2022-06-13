@@ -34,11 +34,9 @@ namespace IOA___WinForms.SemestralkaPart1
 
         }
 
-        public void CalculateCoefficients()
+        public List<Routes> CalculateCoefficients(Node parPrimarySource, int parK)
         {
-            Node tmpStredisko = aForwardStarShortestPath.GetNodeById(1);
-
-
+            Node tmpStredisko = parPrimarySource;
 
             int indexI = 0;
             int indexJ = 0;
@@ -114,14 +112,15 @@ namespace IOA___WinForms.SemestralkaPart1
                 indexJ = 0;
             }
 
-          List<Routes> tmpCalculatedRoutes = CalculateRoutes(tmpListWithoutPrimarySource);
+         return CalculateRoutes(tmpListWithoutPrimarySource, parK);
+
         }
 
 
-        public List<Routes> CalculateRoutes(List<Node> parListNodesWithoutPrimarySource)
+        public List<Routes> CalculateRoutes(List<Node> parListNodesWithoutPrimarySource, int parK)
         {
 
-            int tmpK = 150;
+            int tmpK = parK;
 
             aCoeffAndNodesList.Sort();
 
@@ -476,8 +475,7 @@ namespace IOA___WinForms.SemestralkaPart1
             aRoutesList[parIndex].Capacity += parCapacity;
 
             aDictionaryRoutePointers.Add(parNode, aRoutesList[parIndex]);
-
-
+            
         }
     }
 }
