@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -173,6 +173,8 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
                     else
                     {
                         aForwardStarItemList.RemoveAt(i);
+                        i = i - 1;
+                        aIndexInList = aIndexInList - 1;
                         tmpRemoved = true;
                     }
 
@@ -182,14 +184,24 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
                 while (aRemovedNodesDictionary.ContainsKey(aForwardStarItemList[i].InitialNode.Id) && (aForwardStarItemList[i].EndNode != null && !aRemovedNodesDictionary.ContainsKey(aForwardStarItemList[i].EndNode.Id)))
                 {
                     aForwardStarItemList.RemoveAt(i);
+                    i = i - 1;
+                    aIndexInList = aIndexInList - 1;
                     tmpRemoved = true;
 
-                } 
+                }
+
+                if (tmpRemoved == false && tmpDeletedNode != null && aForwardStarItemList[i].EndNode == null && aForwardStarItemList[i].InitialNode.Id == tmpDeletedNode.Id)
+                {
+                    aForwardStarItemList.RemoveAt(i);
+                    i = i - 1;
+                    aIndexInList = aIndexInList - 1;
+                    tmpRemoved = true;
+                }
 
 
 
 
-                if (aForwardStarItemList[i].InitialNode.CompareTo(aNode) != 0)
+                if (tmpRemoved == false && aForwardStarItemList[i].InitialNode.CompareTo(aNode) != 0)
                 {
                     aNode = aForwardStarItemList[i].InitialNode;
 
@@ -230,6 +242,14 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
                 }
 
                 aIndexInList++;
+            }
+
+            if (tmpDeletedNode != null)
+            {
+                if (aRemovedNodesDictionary.Max().Key == tmpDeletedNode.Id)
+                {
+                    aRemovedNodesDictionary.Remove(tmpDeletedNode.Id);
+                }
             }
         }
 
@@ -305,7 +325,7 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
         {
             return Vector2.Distance(aDictionaryCoordinates[parNode1], aDictionaryCoordinates[parNode2]);
         }
-
+        
         public Vector2 GetCoordinate(int parNode)
         {
             return aDictionaryCoordinates[parNode];
@@ -369,8 +389,15 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
                 // Edge Exists
             }
 
-            aForwardStarItemList.Add(new ForwardStarItemSem(parEdge.FirstNode, GetEuclideanDistance(parEdge.FirstNode.Id, parEdge.SecondNode.Id), parEdge.SecondNode));
-            aForwardStarItemList.Add(new ForwardStarItemSem(parEdge.SecondNode, GetEuclideanDistance(parEdge.FirstNode.Id, parEdge.SecondNode.Id), parEdge.FirstNode));
+            double tmpDistance = GetEuclideanDistance(parEdge.FirstNode.Id, parEdge.SecondNode.Id);
+
+            if (parEdge.Distance > 0)
+            {
+                tmpDistance = parEdge.Distance;
+            }
+
+            aForwardStarItemList.Add(new ForwardStarItemSem(parEdge.FirstNode, tmpDistance, parEdge.SecondNode));
+            aForwardStarItemList.Add(new ForwardStarItemSem(parEdge.SecondNode, tmpDistance, parEdge.FirstNode));
 
             Finalise();
         }
@@ -476,6 +503,17 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka
             Finalise();
 
             sr.Close();
+        }
+
+        public void RecalculateAllEdgesWithEuclidean()
+        {
+            foreach (var tmpStartNode in this.GetListNodes())
+            {
+                foreach (var tmpForwardStarItem in this.FindAllConnected(tmpStartNode))
+                {
+                    tmpForwardStarItem.Distance = GetEuclideanDistance(tmpForwardStarItem.InitialNode.Id, tmpForwardStarItem.EndNode.Id);
+                }
+            }
         }
     }
 }

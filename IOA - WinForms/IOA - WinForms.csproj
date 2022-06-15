@@ -16,6 +16,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="MetaSem\COORDS_Nodes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MetaSem\ID_Nodes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MetaSem\NAME_Nodes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SietMetodaCiastnocnych\vrcholy_spoj_cena.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

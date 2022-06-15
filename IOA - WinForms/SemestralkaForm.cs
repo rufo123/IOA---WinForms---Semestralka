@@ -62,6 +62,8 @@ namespace IOA___WinForms
 
         private bool aDrawResults;
 
+        private bool aSetDistances;
+
         public SemestralkaForm(ForwardStarSem parStar, DjikstraSem parDjikstra)
         {
 
@@ -130,7 +132,7 @@ namespace IOA___WinForms
 
         public void AddToRTree()
         {
-
+            
 
             foreach (var tmpNode in aForwardStar.GetListNodes())
             {
@@ -196,35 +198,38 @@ namespace IOA___WinForms
 
             var test = aTestTree.Contains(aActualSizeRectangle);
 
-            var pen1 = new Pen(Brushes.White, 1f);
 
             int tmpWidth = aZoomFactor * 5;
 
 
 
-            Node tmpOldNode = parPrimarySource;
+            Node tmpOldNode = null;
 
-            pen1 = new Pen(parRoute.DrawnRouteColor, 1f);
+            Pen pen1 = new Pen(Brushes.LimeGreen, 2);
 
-            if (parRoute != null && parRoute.Route != null)
+            if (parRoute != null && parRoute.RoutePath != null)
             {
 
-                foreach (var tmpNode in parRoute.Route)
+                foreach (var tmpNode in parRoute.RoutePath)
                 {
 
+                    if (tmpOldNode != null)
+                    {
+                        Vector2 tmpGraphCoordinatesInitial =
+                            ConvertCoordinatesToMouseCoordinates(tmpOldNode.Coordinates, tmpWidth);
 
-                    Vector2 tmpGraphCoordinatesInitial =
-                        ConvertCoordinatesToMouseCoordinates(tmpOldNode.Coordinates, tmpWidth);
+                        Vector2 tmpGraphCoordinatesEnd =
+                            ConvertCoordinatesToMouseCoordinates(tmpNode.Coordinates, tmpWidth);
 
-                    Vector2 tmpGraphCoordinatesEnd =
-                        ConvertCoordinatesToMouseCoordinates(tmpNode.Coordinates, tmpWidth);
-
-                    graphics.DrawLine(pen1, tmpGraphCoordinatesInitial.X, tmpGraphCoordinatesInitial.Y,
-                        tmpGraphCoordinatesEnd.X, tmpGraphCoordinatesEnd.Y);
+                        graphics.DrawLine(pen1, tmpGraphCoordinatesInitial.X, tmpGraphCoordinatesInitial.Y,
+                            tmpGraphCoordinatesEnd.X, tmpGraphCoordinatesEnd.Y);
 
 
-                    graphics.DrawLine(pen1, tmpGraphCoordinatesInitial.X, tmpGraphCoordinatesInitial.Y,
-                        tmpGraphCoordinatesEnd.X, tmpGraphCoordinatesEnd.Y);
+                        graphics.DrawLine(pen1, tmpGraphCoordinatesInitial.X, tmpGraphCoordinatesInitial.Y,
+                            tmpGraphCoordinatesEnd.X, tmpGraphCoordinatesEnd.Y);
+                    }
+
+                   
 
                     tmpOldNode = tmpNode;
 
@@ -704,8 +709,19 @@ namespace IOA___WinForms
                         if (tmpDistance > -5 && tmpDistance < 5)
                         {
 
+                            double tmpEdgeDistance = 0.00;
+
+                            if (aSetDistances)
+                            {
+                                tmpEdgeDistance = aForwardStar.Find(aOldClicked, tmpConnected.EndNode).Distance;
+                            }
+                            else
+                            {
+                                tmpEdgeDistance = aForwardStar.GetEuclideanDistance(aOldClicked.Id, tmpConnected.EndNode.Id);
+                            }
+
                             aSelectedEdge = new Edge(aOldClicked, tmpConnected.EndNode,
-                                aForwardStar.GetEuclideanDistance(aOldClicked.Id, tmpConnected.EndNode.Id));
+                                tmpEdgeDistance);
 
                             ShowEdgeInfo(aSelectedEdge);
 
@@ -770,7 +786,7 @@ namespace IOA___WinForms
             listBoxSelectedNode.Items.Add("");
             listBoxSelectedNode.Items.Add("Start Node: " + aSelectedEdge.FirstNode.Id);
             listBoxSelectedNode.Items.Add("End Node: " + aSelectedEdge.SecondNode.Id);
-            listBoxSelectedNode.Items.Add("Distance: " + aSelectedEdge.Distance);
+            textBoxDistance.Text = aSelectedEdge.Distance.ToString();
         }
 
         private void listBoxNodeInfo_MouseMove(object sender, MouseEventArgs e)
@@ -1004,16 +1020,54 @@ namespace IOA___WinForms
 
             if (tmpPrimarySourceCounter == 1 && tmpCustomersCounter == tmpListNodes.Count - 1 && tmpCustomersOkay && aForwardStarShortestPath.IsNetworkInterConnected() && numericUpDownK.Value > 0)
             {
+
+                aSelectedRoute = new Routes();
+
+                aClarkeWrigthPrimary.Init(aForwardStarShortestPath);
+
                 tmpRoutesList = aClarkeWrigthPrimary.CalculateCoefficients(tmpListNodes[0], Convert.ToInt32(Math.Round(numericUpDownK.Value, 0)));
 
                 aPrimarySource = tmpPrimarySources[0];
 
+                aResultRoutes = tmpRoutesList;
+
+                for (int i = 0; i < aResultRoutes.Count; i++)
+                {
+                   List<int> tmpRouteIndexes = aForwardStarShortestPath.Find(aPrimarySource, aResultRoutes[i].NodeAtStart).ShortestPathRoute;
+                   List<Node> tmpRouteNodes = aForwardStarShortestPath.ConvertRouteIndexesToNodes(tmpRouteIndexes);
+                   tmpRouteNodes.RemoveAt(tmpRouteNodes.Count - 1);
+
+                   List<int> tmpRouteIndexes2 = new List<int>();
+                   List<Node> tmpRouteNodes2 = new List<Node>();
+
+                   if (aResultRoutes[i].NodeAtEnd != null)
+                   {
+                       tmpRouteIndexes2 = aForwardStarShortestPath.Find(aPrimarySource, aResultRoutes[i].NodeAtEnd).ShortestPathRoute;
+                       tmpRouteNodes2 = aForwardStarShortestPath.ConvertRouteIndexesToNodes(tmpRouteIndexes2);
+                       tmpRouteNodes2.Reverse();
+                       tmpRouteNodes2.RemoveAt(0);
+                    }
+                   else
+                   {
+                       tmpRouteIndexes2 = aForwardStarShortestPath.Find(aPrimarySource, aResultRoutes[i].NodeAtStart).ShortestPathRoute;
+                       tmpRouteNodes2 = aForwardStarShortestPath.ConvertRouteIndexesToNodes(tmpRouteIndexes2);
+                       tmpRouteNodes2.Reverse();
+                       tmpRouteNodes2.RemoveAt(0);
+                    }
+
+
+
+                   aResultRoutes[i].RoutePath.InsertRange(0, tmpRouteNodes);
+                   aResultRoutes[i].RoutePath.AddRange(tmpRouteNodes2);
+
+
+                }
+
                 aDrawResults = true;
 
-                aResultRoutes = tmpRoutesList;
             }
 
-
+            
 
             listBoxRoutes.Items.Clear();
 
@@ -1047,6 +1101,9 @@ namespace IOA___WinForms
         {
             if (listBoxRoutes.SelectedItem != null)
             {
+                aSelectedEdge = null;
+                aOldClicked = null;
+                aSecondClickedNode = null;
                 aSelectedRoute = aResultRoutes[listBoxRoutes.SelectedIndex];
             }
         }
@@ -1106,7 +1163,33 @@ namespace IOA___WinForms
 
         }
 
+        private void buttonSaveDistance_Click(object sender, EventArgs e)
+        {
+            if (aSelectedEdge != null)
+            {
+                aForwardStar.Find(aSelectedEdge.FirstNode, aSelectedEdge.SecondNode).Distance = Double.Parse(textBoxDistance.Text, CultureInfo.InvariantCulture);
+                aForwardStar.Find(aSelectedEdge.SecondNode, aSelectedEdge.FirstNode).Distance = Double.Parse(textBoxDistance.Text, CultureInfo.InvariantCulture);
+            }
+            
+        }
 
-        
+        private void radioButtonEuclidean_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonEuclidean.Checked)
+            {
+                aForwardStar.RecalculateAllEdgesWithEuclidean();
+                aSetDistances = false;
+            }
+
+
+        }
+
+        private void radioButtonSet_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonSet.Checked)
+            {
+                aSetDistances = true;
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarShortest
         {
             aForwardStarItemList = new List<ForwardStartItemShortest>();
             aUniqueNodeDictionary = new Dictionary<int, Node>();
+            aUniqueNodeDictionary = new Dictionary<int, Node>();
             aArrayPointers = new Dictionary<Node, int>();
             aDictionaryIndex = new Dictionary<Node, int>();
             aInterConnected = true;
@@ -39,11 +40,27 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarShortest
             aInterConnected = true;
         }
 
-        public void Add(Node parNode, Node parTargetNode, double parShortestPathCost)
+        public List<Node> ConvertRouteIndexesToNodes(List<int> parRouteIndexes)
+        {
+
+            List<Node> tmpNodes = GetListNodes();
+            List<Node> tmpReturnRoute = new List<Node>(parRouteIndexes.Count);
+
+            for (int i = 0; i < parRouteIndexes.Count; i++)
+            {
+                tmpReturnRoute.Add(tmpNodes[parRouteIndexes[i]]); 
+            }
+
+            return tmpReturnRoute;
+        }
+
+        public void Add(Node parNode, Node parTargetNode, double parShortestPathCost, List<int> parShortestPathRoute)
         {
             aUniqueNodeDictionary.TryAdd(parNode.Id, parNode);
             aUniqueNodeDictionary.TryAdd(parTargetNode.Id, parTargetNode);
-            aForwardStarItemList.Add(new ForwardStartItemShortest(aUniqueNodeDictionary[parTargetNode.Id], aUniqueNodeDictionary[parNode.Id], parShortestPathCost));
+
+
+            aForwardStarItemList.Add(new ForwardStartItemShortest(aUniqueNodeDictionary[parTargetNode.Id], aUniqueNodeDictionary[parNode.Id], parShortestPathCost, parShortestPathRoute));
 
             if (parShortestPathCost == ShortestPathIOA.Constants.INF)
             {
@@ -82,11 +99,6 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarShortest
         public ForwardStartItemShortest Find(Node parStartNode, Node parEndNode)
         {
 
-
-            if (parStartNode.Id == 1 && parEndNode.Id == 3)
-            {
-                Console.WriteLine();
-            }
 
             int tmpPointer = -1;
             int tmpEndPointer = -1;

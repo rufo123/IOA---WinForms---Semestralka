@@ -12,6 +12,8 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarShortest
 
         private double aShortestPathCost;
 
+        private List<int> aShortestPathRouteByNodeIndexes;
+
         public Node StartingNode
         {
             get => aStartingNode;
@@ -30,11 +32,18 @@ namespace IOA___WinForms.SemestralkaPart1.ForwardStarShortest
             set => aShortestPathCost = value;
         }
 
-        public ForwardStartItemShortest(Node parStartingNode, Node parEndingNode, double parShortestPathCost)
+        public List<int> ShortestPathRoute
+        {
+            get => aShortestPathRouteByNodeIndexes;
+            set => aShortestPathRouteByNodeIndexes = value;
+        }
+
+        public ForwardStartItemShortest(Node parStartingNode, Node parEndingNode, double parShortestPathCost, List<int> parShortestPathRouteByNodeIndexes)
         {
             aStartingNode = parStartingNode;
             aEndingNode = parEndingNode;
             aShortestPathCost = parShortestPathCost;
+            aShortestPathRouteByNodeIndexes = parShortestPathRouteByNodeIndexes;
         }
 
         public int CompareTo(object? obj)

@@ -21,6 +21,8 @@ namespace IOA___WinForms.SemestralkaPart1
 
         private Color aDrawnRouteColor;
 
+        private List<Node> aRoutePath;
+
         public Node NodeAtStart
         {
             get => aNodeAtStart;
@@ -51,12 +53,20 @@ namespace IOA___WinForms.SemestralkaPart1
             set => aDrawnRouteColor = value;
         }
 
-        public Routes(Node parANodeAtStart, Node parANodeAtEnd, List<Node> parARoute, double parACapacity)
+        public List<Node> RoutePath
+        {
+            get => aRoutePath;
+            set => aRoutePath = value;
+        }
+
+
+        public Routes(Node parANodeAtStart, Node parANodeAtEnd, List<Node> parARoute, double parACapacity, List<Node> parRoutePath)
         {
             aNodeAtStart = parANodeAtStart;
             aNodeAtEnd = parANodeAtEnd;
             aRoute = parARoute;
             aCapacity = parACapacity;
+            aRoutePath = parRoutePath;
 
             aRandomSeedGenerator = new Random();
             aRandomGenerator = new Random(aRandomSeedGenerator.Next());

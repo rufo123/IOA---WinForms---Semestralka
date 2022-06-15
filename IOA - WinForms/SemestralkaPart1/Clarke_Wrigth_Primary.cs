@@ -22,6 +22,11 @@ namespace IOA___WinForms.SemestralkaPart1
 
         public Clarke_Wrigth_Primary(ForwardStarShortestPath parForwardStar)
         {
+            Init(parForwardStar);
+        }
+
+        public void Init(ForwardStarShortestPath parForwardStar)
+        {
             aForwardStarShortestPath = parForwardStar;
 
             aCoeffAndNodesList = new List<CoefficientAndNodes>();
@@ -31,8 +36,10 @@ namespace IOA___WinForms.SemestralkaPart1
             aRoutesList = new List<Routes>();
 
             aDictionaryRoutePointers = new Dictionary<Node, Routes>();
-
         }
+
+      
+        
 
         public List<Routes> CalculateCoefficients(Node parPrimarySource, int parK)
         {
@@ -40,8 +47,6 @@ namespace IOA___WinForms.SemestralkaPart1
 
             int indexI = 0;
             int indexJ = 0;
-
-            var test = aForwardStarShortestPath.FindAllConnected(aForwardStarShortestPath.GetNodeById(3));
 
             List<Node> tmpListWithoutPrimarySource = aForwardStarShortestPath.GetListNodes();
             tmpListWithoutPrimarySource.Remove(tmpStredisko);
@@ -76,7 +81,7 @@ namespace IOA___WinForms.SemestralkaPart1
                         if (aMatrix[indexI, indexJ] > 0)
                         {
 
-                            CoefficientAndNodes tmpCoefficientAndNodes = new CoefficientAndNodes(aMatrix[indexI, indexJ], i, j);
+                            CoefficientAndNodes tmpCoefficientAndNodes = new CoefficientAndNodes(aMatrix[indexI, indexJ], i, j, aForwardStarShortestPath.ConvertRouteIndexesToNodes(aForwardStarShortestPath.Find(i, j).ShortestPathRoute));
 
                             aCoeffAndNodesList.Add(tmpCoefficientAndNodes);
 
@@ -123,9 +128,16 @@ namespace IOA___WinForms.SemestralkaPart1
             int tmpK = parK;
 
             aCoeffAndNodesList.Sort();
+            aCoeffAndNodesList.Reverse();
 
             for (int i = 0; i < aCoeffAndNodesList.Count; i++)
             {
+
+                if (i >= aCoeffAndNodesList.Count)
+                {
+                    continue;
+                }
+
                 if (aCoeffAndNodesList[i].Forbidden)
                 {
                     continue;
@@ -137,7 +149,7 @@ namespace IOA___WinForms.SemestralkaPart1
                 if (aRoutesList.Count <= 0 && tmpK >= tmpCap1 + tmpCap2)
                 {
                     aRoutesList.Add(new Routes(aCoeffAndNodesList[i].StartingNode, aCoeffAndNodesList[i].EndingNode,
-                        new List<Node>() { aCoeffAndNodesList[i].StartingNode, aCoeffAndNodesList[i].EndingNode }, tmpCap1 + tmpCap2));
+                        new List<Node>() { aCoeffAndNodesList[i].StartingNode, aCoeffAndNodesList[i].EndingNode }, tmpCap1 + tmpCap2, aCoeffAndNodesList[i].Route));
 
                     aDictionaryRoutePointers.Add(aCoeffAndNodesList[i].StartingNode, aRoutesList[0]);
                     aDictionaryRoutePointers.Add(aCoeffAndNodesList[i].EndingNode, aRoutesList[0]);
@@ -154,8 +166,8 @@ namespace IOA___WinForms.SemestralkaPart1
 
                 else if (tmpK < tmpCap1 + tmpCap2)
                 {
-                    //
-                    aCoeffAndNodesList.RemoveAt(i);
+
+                    // aCoeffAndNodesList.RemoveAt(i);
                     aCoeffAndNodesList[i].Forbidden = true;
                 }
                 else
@@ -165,16 +177,7 @@ namespace IOA___WinForms.SemestralkaPart1
 
                     for (int j = 0; j < aRoutesList.Count; j++)
                     {
-                        if (aRoutesList[j].NodeAtStart.Id == aCoeffAndNodesList[i].StartingNode.Id &&
-                            aRoutesList[j].NodeAtEnd.Id == aCoeffAndNodesList[i].EndingNode.Id)
-                        {
-                            Console.WriteLine("Pepega");
-                        }
-                        else if (aRoutesList[j].NodeAtEnd.Id == aCoeffAndNodesList[i].EndingNode.Id &&
-                          aRoutesList[j].NodeAtStart.Id == aCoeffAndNodesList[i].StartingNode.Id)
-                        {
-                            Console.WriteLine("Pepega");
-                        }
+                      
 
                         if (aDictionaryRoutePointers.ContainsKey(aCoeffAndNodesList[i].StartingNode) &&
                             aDictionaryRoutePointers.ContainsKey(aCoeffAndNodesList[i].EndingNode))
@@ -303,12 +306,12 @@ namespace IOA___WinForms.SemestralkaPart1
                             if (aRoutesList[j].Capacity + tmpCap1 + tmpCap2 <= tmpK)
                             {
 
-                                AddRoute(j, true, aCoeffAndNodesList[i].EndingNode, tmpCap2 + tmpCap2);
+                                AddRoute(j, true, aCoeffAndNodesList[i].EndingNode, tmpCap2 + tmpCap2, aCoeffAndNodesList[i].Route, true);
 
                                 RemoveFromDictionaryAndLists(aCoeffAndNodesList[i].StartingNode);
 
                                 tmpRouteFound = true;
-
+                                
                                 break;
 
                             }
@@ -328,7 +331,7 @@ namespace IOA___WinForms.SemestralkaPart1
                             if (aRoutesList[j].Capacity + tmpCap1 + tmpCap2 <= tmpK)
                             {
 
-                                AddRoute(j, true, aCoeffAndNodesList[i].StartingNode, tmpCap2 + tmpCap2);
+                                AddRoute(j, true, aCoeffAndNodesList[i].StartingNode, tmpCap2 + tmpCap2, aCoeffAndNodesList[i].Route);
 
                                 RemoveFromDictionaryAndLists(aCoeffAndNodesList[i].EndingNode);
 
@@ -352,7 +355,7 @@ namespace IOA___WinForms.SemestralkaPart1
                             if (aRoutesList[j].Capacity + tmpCap1 + tmpCap2 <= tmpK)
                             {
 
-                                AddRoute(j, false, aCoeffAndNodesList[i].EndingNode, tmpCap2 + tmpCap2);
+                                AddRoute(j, false, aCoeffAndNodesList[i].EndingNode, tmpCap2 + tmpCap2, aCoeffAndNodesList[i].Route);
 
                                 RemoveFromDictionaryAndLists(aCoeffAndNodesList[i].StartingNode);
 
@@ -376,7 +379,7 @@ namespace IOA___WinForms.SemestralkaPart1
                             if (aRoutesList[j].Capacity + tmpCap1 + tmpCap2 <= tmpK)
                             {
 
-                                AddRoute(j, false, aCoeffAndNodesList[i].StartingNode, tmpCap2 + tmpCap2);
+                                AddRoute(j, false, aCoeffAndNodesList[i].StartingNode, tmpCap2 + tmpCap2, aCoeffAndNodesList[i].Route, true);
 
                                 RemoveFromDictionaryAndLists(aCoeffAndNodesList[i].EndingNode);
 
@@ -398,7 +401,7 @@ namespace IOA___WinForms.SemestralkaPart1
                     if (!tmpRouteFound)
                     {
 
-                        Routes tmpRoutes = new Routes(aCoeffAndNodesList[i].StartingNode, aCoeffAndNodesList[i].EndingNode, new List<Node>() { aCoeffAndNodesList[i].StartingNode, aCoeffAndNodesList[i].EndingNode }, tmpCap1 + tmpCap2);
+                        Routes tmpRoutes = new Routes(aCoeffAndNodesList[i].StartingNode, aCoeffAndNodesList[i].EndingNode, new List<Node>() { aCoeffAndNodesList[i].StartingNode, aCoeffAndNodesList[i].EndingNode }, tmpCap1 + tmpCap2, aCoeffAndNodesList[i].Route);
 
                         aRoutesList.Add(tmpRoutes);
 
@@ -422,7 +425,7 @@ namespace IOA___WinForms.SemestralkaPart1
             {
                 if (!aDictionaryRoutePointers.ContainsKey(tmpNodes))
                 {
-                    aRoutesList.Add(new Routes(tmpNodes, null, new List<Node>() { tmpNodes }, tmpNodes.Capacity));
+                    aRoutesList.Add(new Routes(tmpNodes, null, new List<Node>() { tmpNodes }, tmpNodes.Capacity, new List<Node>()));
                 }
             }
 
@@ -459,16 +462,38 @@ namespace IOA___WinForms.SemestralkaPart1
             aDictionaryOfAllowedCoeficients.Remove(parNode);
         }
 
-        public void AddRoute(int parIndex, bool parAddAtStart, Node parNode, double parCapacity)
+        public void AddRoute(int parIndex, bool parAddAtStart, Node parNode, double parCapacity, List<Node> parRoutes, bool parRotate = false)
         {
+
+            List<Node> tmpRouteDrawnPath = new List<Node>();
+
+            for (int i = 0; i < parRoutes.Count; i++)
+            {
+                tmpRouteDrawnPath.Add(parRoutes[i]);
+            }
+
+
             if (parAddAtStart)
             {
+                if (tmpRouteDrawnPath[tmpRouteDrawnPath.Count - 1].Id == parNode.Id)
+                {
+                    tmpRouteDrawnPath.Reverse();
+                }
+                tmpRouteDrawnPath.RemoveAt(tmpRouteDrawnPath.Count - 1);
                 aRoutesList[parIndex].Route.Insert(0, parNode);
+                aRoutesList[parIndex].RoutePath.InsertRange(0, tmpRouteDrawnPath);
                 aRoutesList[parIndex].NodeAtStart = parNode;
             }
             else
             {
+                
+                if (tmpRouteDrawnPath[0].Id == parNode.Id)
+                {
+                    tmpRouteDrawnPath.Reverse();
+                }
+                tmpRouteDrawnPath.RemoveAt(0);
                 aRoutesList[parIndex].Route.Add(parNode);
+                aRoutesList[parIndex].RoutePath.AddRange(tmpRouteDrawnPath);
                 aRoutesList[parIndex].NodeAtEnd = parNode;
             }
 

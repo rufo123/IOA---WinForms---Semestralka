@@ -55,6 +55,15 @@ namespace IOA___WinForms
             this.labelAllNodesConnectedTrueFalse = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageVisualizer = new System.Windows.Forms.TabPage();
+            this.buttonSaveDistance = new System.Windows.Forms.Button();
+            this.textBoxDistance = new System.Windows.Forms.TextBox();
+            this.labelDistance = new System.Windows.Forms.Label();
+            this.groupBoxDistances = new System.Windows.Forms.GroupBox();
+            this.radioButtonSet = new System.Windows.Forms.RadioButton();
+            this.radioButtonEuclidean = new System.Windows.Forms.RadioButton();
+            this.labelDistances = new System.Windows.Forms.Label();
+            this.buttonLoad = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.tabPageClark = new System.Windows.Forms.TabPage();
             this.numericUpDownK = new System.Windows.Forms.NumericUpDown();
             this.labelCapacity = new System.Windows.Forms.Label();
@@ -63,12 +72,11 @@ namespace IOA___WinForms
             this.labelPrimarySourceText = new System.Windows.Forms.Label();
             this.labelConnNetworkClarkText = new System.Windows.Forms.Label();
             this.listBoxRoutes = new System.Windows.Forms.ListBox();
-            this.buttonSave = new System.Windows.Forms.Button();
-            this.buttonLoad = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxNodeInfo.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPageVisualizer.SuspendLayout();
+            this.groupBoxDistances.SuspendLayout();
             this.tabPageClark.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownK)).BeginInit();
             this.SuspendLayout();
@@ -150,7 +158,7 @@ namespace IOA___WinForms
             "dasdas"});
             this.listBoxSelectedNode.Location = new System.Drawing.Point(32, 593);
             this.listBoxSelectedNode.Name = "listBoxSelectedNode";
-            this.listBoxSelectedNode.Size = new System.Drawing.Size(178, 154);
+            this.listBoxSelectedNode.Size = new System.Drawing.Size(178, 79);
             this.listBoxSelectedNode.TabIndex = 7;
             this.listBoxSelectedNode.Visible = false;
             // 
@@ -318,6 +326,11 @@ namespace IOA___WinForms
             // 
             // tabPageVisualizer
             // 
+            this.tabPageVisualizer.Controls.Add(this.buttonSaveDistance);
+            this.tabPageVisualizer.Controls.Add(this.textBoxDistance);
+            this.tabPageVisualizer.Controls.Add(this.labelDistance);
+            this.tabPageVisualizer.Controls.Add(this.groupBoxDistances);
+            this.tabPageVisualizer.Controls.Add(this.labelDistances);
             this.tabPageVisualizer.Controls.Add(this.buttonLoad);
             this.tabPageVisualizer.Controls.Add(this.buttonSave);
             this.tabPageVisualizer.Controls.Add(this.groupBoxNodeInfo);
@@ -342,6 +355,95 @@ namespace IOA___WinForms
             this.tabPageVisualizer.TabIndex = 0;
             this.tabPageVisualizer.Text = "Visualizer";
             this.tabPageVisualizer.UseVisualStyleBackColor = true;
+            // 
+            // buttonSaveDistance
+            // 
+            this.buttonSaveDistance.Location = new System.Drawing.Point(109, 730);
+            this.buttonSaveDistance.Name = "buttonSaveDistance";
+            this.buttonSaveDistance.Size = new System.Drawing.Size(101, 23);
+            this.buttonSaveDistance.TabIndex = 21;
+            this.buttonSaveDistance.Text = "Save Distance";
+            this.buttonSaveDistance.UseVisualStyleBackColor = true;
+            this.buttonSaveDistance.Click += new System.EventHandler(this.buttonSaveDistance_Click);
+            // 
+            // textBoxDistance
+            // 
+            this.textBoxDistance.Location = new System.Drawing.Point(95, 688);
+            this.textBoxDistance.Name = "textBoxDistance";
+            this.textBoxDistance.Size = new System.Drawing.Size(115, 23);
+            this.textBoxDistance.TabIndex = 20;
+            // 
+            // labelDistance
+            // 
+            this.labelDistance.AutoSize = true;
+            this.labelDistance.Location = new System.Drawing.Point(34, 691);
+            this.labelDistance.Name = "labelDistance";
+            this.labelDistance.Size = new System.Drawing.Size(55, 15);
+            this.labelDistance.TabIndex = 19;
+            this.labelDistance.Text = "Distance:";
+            // 
+            // groupBoxDistances
+            // 
+            this.groupBoxDistances.Controls.Add(this.radioButtonSet);
+            this.groupBoxDistances.Controls.Add(this.radioButtonEuclidean);
+            this.groupBoxDistances.Location = new System.Drawing.Point(1103, 398);
+            this.groupBoxDistances.Name = "groupBoxDistances";
+            this.groupBoxDistances.Size = new System.Drawing.Size(200, 69);
+            this.groupBoxDistances.TabIndex = 18;
+            this.groupBoxDistances.TabStop = false;
+            // 
+            // radioButtonSet
+            // 
+            this.radioButtonSet.AutoSize = true;
+            this.radioButtonSet.Location = new System.Drawing.Point(18, 38);
+            this.radioButtonSet.Name = "radioButtonSet";
+            this.radioButtonSet.Size = new System.Drawing.Size(41, 19);
+            this.radioButtonSet.TabIndex = 1;
+            this.radioButtonSet.Text = "Set";
+            this.radioButtonSet.UseVisualStyleBackColor = true;
+            this.radioButtonSet.CheckedChanged += new System.EventHandler(this.radioButtonSet_CheckedChanged);
+            // 
+            // radioButtonEuclidean
+            // 
+            this.radioButtonEuclidean.AutoSize = true;
+            this.radioButtonEuclidean.Checked = true;
+            this.radioButtonEuclidean.Location = new System.Drawing.Point(18, 12);
+            this.radioButtonEuclidean.Name = "radioButtonEuclidean";
+            this.radioButtonEuclidean.Size = new System.Drawing.Size(76, 19);
+            this.radioButtonEuclidean.TabIndex = 0;
+            this.radioButtonEuclidean.TabStop = true;
+            this.radioButtonEuclidean.Text = "Euclidean";
+            this.radioButtonEuclidean.UseVisualStyleBackColor = true;
+            this.radioButtonEuclidean.CheckedChanged += new System.EventHandler(this.radioButtonEuclidean_CheckedChanged);
+            // 
+            // labelDistances
+            // 
+            this.labelDistances.AutoSize = true;
+            this.labelDistances.Location = new System.Drawing.Point(1103, 367);
+            this.labelDistances.Name = "labelDistances";
+            this.labelDistances.Size = new System.Drawing.Size(60, 15);
+            this.labelDistances.TabIndex = 17;
+            this.labelDistances.Text = "Distances:";
+            // 
+            // buttonLoad
+            // 
+            this.buttonLoad.Location = new System.Drawing.Point(1189, 318);
+            this.buttonLoad.Name = "buttonLoad";
+            this.buttonLoad.Size = new System.Drawing.Size(75, 23);
+            this.buttonLoad.TabIndex = 16;
+            this.buttonLoad.Text = "Load";
+            this.buttonLoad.UseVisualStyleBackColor = true;
+            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(1189, 267);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.TabIndex = 15;
+            this.buttonSave.Text = "Save";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // tabPageClark
             // 
@@ -429,26 +531,6 @@ namespace IOA___WinForms
             this.listBoxRoutes.Click += new System.EventHandler(this.listBoxRoutes_Click);
             this.listBoxRoutes.DoubleClick += new System.EventHandler(this.listBoxRoutes_DoubleClick);
             // 
-            // buttonSave
-            // 
-            this.buttonSave.Location = new System.Drawing.Point(1189, 267);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonSave.TabIndex = 15;
-            this.buttonSave.Text = "Save";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // buttonLoad
-            // 
-            this.buttonLoad.Location = new System.Drawing.Point(1189, 318);
-            this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(75, 23);
-            this.buttonLoad.TabIndex = 16;
-            this.buttonLoad.Text = "Load";
-            this.buttonLoad.UseVisualStyleBackColor = true;
-            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
-            // 
             // SemestralkaForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -466,6 +548,8 @@ namespace IOA___WinForms
             this.tabControl1.ResumeLayout(false);
             this.tabPageVisualizer.ResumeLayout(false);
             this.tabPageVisualizer.PerformLayout();
+            this.groupBoxDistances.ResumeLayout(false);
+            this.groupBoxDistances.PerformLayout();
             this.tabPageClark.ResumeLayout(false);
             this.tabPageClark.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownK)).EndInit();
@@ -511,5 +595,12 @@ namespace IOA___WinForms
         private System.Windows.Forms.NumericUpDown numericUpDownK;
         private System.Windows.Forms.Button buttonLoad;
         private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.GroupBox groupBoxDistances;
+        private System.Windows.Forms.RadioButton radioButtonSet;
+        private System.Windows.Forms.RadioButton radioButtonEuclidean;
+        private System.Windows.Forms.Label labelDistances;
+        private System.Windows.Forms.TextBox textBoxDistance;
+        private System.Windows.Forms.Label labelDistance;
+        private System.Windows.Forms.Button buttonSaveDistance;
     }
 }

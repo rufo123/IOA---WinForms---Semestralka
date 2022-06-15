@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Numerics;
 using System.Windows.Forms;
 using IOA___WinForms;
+using IOA___WinForms.MetaSem;
 using IOA___WinForms.MetodaSZRohu;
 using IOA___WinForms.SemestralkaPart1;
 using IOA___WinForms.SemestralkaPart1.ForwardStarSemestralka;
@@ -19,7 +20,12 @@ namespace ShortestPathIOA
         [STAThread]
         static void Main(string[] args)
         {
-            
+
+            /* MetaMain tmpMain = new MetaMain();}
+
+             return;
+            */
+
             TestovacieSiet tmpTestovacieSiet = new TestovacieSiet();
 
             IOA___WinForms.SemestralkaPart1.DjikstraSem tmpDjikstraSem =
@@ -46,5 +52,8 @@ namespace ShortestPathIOA
              Application.Run(new Form1(tmpTestovacieSiet));
             */
         }
+
+
+       
     }
 }

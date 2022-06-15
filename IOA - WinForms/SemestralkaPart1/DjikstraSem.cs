@@ -59,10 +59,13 @@ namespace IOA___WinForms.SemestralkaPart1
         {
             V = forwardStar.GetCountNodes();
             dist = new double[V];
+            prev = new int[V];
             visited = new bool[V];
             Array.Fill(dist, Constants.INF);
             Array.Fill(visited, false);
+            Array.Fill(prev, -1);
             dist[forwardStar.GetIndexAtNode(parInitialNode)] = 0;
+            prev[forwardStar.GetIndexAtNode(parInitialNode)] = -1;
             currentNode = parInitialNode;
 
 
@@ -90,6 +93,7 @@ namespace IOA___WinForms.SemestralkaPart1
                             if (dist[u] + tmpStarItem.Distance < dist[j])
                             {
                                 dist[j] = dist[u] + tmpStarItem.Distance;
+                                prev[j] = u;
                             }
                         }
                     }
@@ -211,7 +215,24 @@ namespace IOA___WinForms.SemestralkaPart1
 
             for (int i = 0; i < V; i++)
             {
-                parForwardStartShortestPaths.Add(parInitialNode, tmpNodes[i], dist[i]);
+                int tmpEndNode = i;
+                List<int> tmpPathList = new List<int>();
+
+                bool tmpFirstRun = true;
+
+                while (tmpFirstRun || tmpPathList[tmpPathList.Count - 1] != forwardStar.GetIndexAtNode(parInitialNode))
+                {
+                    tmpPathList.Add(tmpEndNode);
+                    if (prev[tmpEndNode] == -1)
+                    {
+                        break;
+                    }
+
+                    tmpEndNode = prev[tmpEndNode];
+                    tmpFirstRun = false;
+                }
+
+                parForwardStartShortestPaths.Add(parInitialNode, tmpNodes[i], dist[i], tmpPathList);
                 parDistanceMatrix[parTmpIteration, i] = dist[i];
             }
 

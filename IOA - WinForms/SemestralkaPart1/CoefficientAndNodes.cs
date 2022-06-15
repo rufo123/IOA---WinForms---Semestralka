@@ -12,6 +12,8 @@ namespace IOA___WinForms.SemestralkaPart1
 
         private Node aEndingNode;
 
+        private List<Node> aRoute;
+
         public double Coefficient => aCoefficient;
 
         public Node StartingNode => aStartingNode;
@@ -26,12 +28,19 @@ namespace IOA___WinForms.SemestralkaPart1
             set => aForbidden = value;
         }
 
+        public List<Node> Route
+        {
+            get => aRoute;
+            set => aRoute = value;
+        }
 
-        public CoefficientAndNodes(double parACoefficient, Node parAStartingNode, Node parAEndingNode)
+
+        public CoefficientAndNodes(double parACoefficient, Node parAStartingNode, Node parAEndingNode, List<Node> parRoute)
         {
             aCoefficient = parACoefficient;
             aStartingNode = parAStartingNode;
             aEndingNode = parAEndingNode;
+            aRoute = parRoute;
         }
 
 
