@@ -53,9 +53,6 @@ namespace IOA___WinForms.MetaSem
 
 
 
-            Debug.WriteLine(tmp1);
-            Debug.WriteLine(tmp2);
-
             MetaMain.ContinuityChecker(tmp1);
             MetaMain.ContinuityChecker(tmp2);
 
@@ -135,10 +132,6 @@ namespace IOA___WinForms.MetaSem
 
             MetaMain.ContinuityChecker(tmp1);
             MetaMain.ContinuityChecker(tmp2);
-
-            Debug.WriteLine(tmp1);
-            Debug.WriteLine(tmp2);
-
 
 
             return new List<List<int>>() { tmp1, tmp2 };

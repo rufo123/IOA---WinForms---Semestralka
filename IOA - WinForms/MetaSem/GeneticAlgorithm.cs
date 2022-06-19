@@ -31,8 +31,19 @@ namespace IOA___WinForms.MetaSem
 
         private Evaluator aEvaluator;
         
-
         private List<List<int>> aPopulation;
+
+        private SortedList<double, List<int>> aElitePopulations;
+
+        private int aElitePopulationsSize;
+
+        private List<int> aBestPopulation;
+
+        private double aBestPopulationHH;
+
+        private int aStartNode;
+
+        private int aEndNode;
 
         public double HH
         {
@@ -52,9 +63,31 @@ namespace IOA___WinForms.MetaSem
             set => n = value;
         }
 
-
-        public GeneticAlgorithm(List<int> parSolution, Dictionary<int, MetaNode> parNodes)
+        public int ElitePopulationsSize
         {
+            get => aElitePopulationsSize;
+            set => aElitePopulationsSize = value;
+        }
+
+        public int StartNode
+        {
+            get => aStartNode;
+            set => aStartNode = value;
+        }
+
+        public int EndNode
+        {
+            get => aEndNode;
+            set => aEndNode = value;
+        }
+
+        public GeneticAlgorithm(List<int> parSolution, Dictionary<int, MetaNode> parNodes, int parNumberOfRepeats)
+        {
+
+            aStartNode = 5;
+
+            aEndNode = 350;
+
             aSelector = new Selector();
 
             aCrossover = new Crossover();
@@ -71,11 +104,20 @@ namespace IOA___WinForms.MetaSem
 
             aMaxPopulations = 20;
 
+            aElitePopulationsSize = 20;
+
             aPopulation = new List<List<int>>(aMaxPopulations);
+
+            aElitePopulations = new SortedList<double, List<int>>();
+
+            aBestPopulation = new List<int>();
+
+            N = parNumberOfRepeats;
 
             GeneratePopulation();
 
             DoWork();
+
         }
 
         public void DoWork()
@@ -83,13 +125,27 @@ namespace IOA___WinForms.MetaSem
 
             aPopulation.Sort((a, b) => MetaMain.CalculateRouteCost(a, aDictionaryNodes).CompareTo(MetaMain.CalculateRouteCost(b, aDictionaryNodes)));
             HH = aEvaluator.Cost(aPopulation[0], aDictionaryNodes);
-            Debug.WriteLine(HH);
+
+            Debug.WriteLine("Genetic Start");
+            Debug.WriteLine("Old Best Cost:" + HH);
+
+            aBestPopulationHH = Double.MaxValue;
+
+            int tmpRepeatsCount = 0;
             
-            while (t <= n)
+            while (t <= n && tmpRepeatsCount < n)
             {
                 aPopulation.Sort((a, b) => MetaMain.CalculateRouteCost(a, aDictionaryNodes).CompareTo(MetaMain.CalculateRouteCost(b, aDictionaryNodes)));
 
                 List<List<int>> yNova = new List<List<int>>();
+
+                double tmpCalculatedHH = aEvaluator.Cost(aPopulation[0], aDictionaryNodes);
+
+                if (aBestPopulationHH > tmpCalculatedHH)
+                {
+                    aBestPopulationHH = tmpCalculatedHH;
+                    aBestPopulation = aPopulation[0];
+                }
 
                 int m = 0;
 
@@ -129,6 +185,9 @@ namespace IOA___WinForms.MetaSem
                     m++;
                 }
 
+                aPopulation.Sort((a, b) => MetaMain.CalculateRouteCost(a, aDictionaryNodes).CompareTo(MetaMain.CalculateRouteCost(b, aDictionaryNodes)));
+                AddToElitePopulation(aPopulation[0]);
+
                 aPopulation.Clear();
 
                 for (int i = 0; i < yNova.Count; i++)
@@ -137,11 +196,39 @@ namespace IOA___WinForms.MetaSem
                 }
                 
                 t++;
+                tmpRepeatsCount++;
             }
             
             HH = aEvaluator.Cost(aPopulation[0], aDictionaryNodes);
             Debug.WriteLine(HH);
 
+            PrintResults();
+
+
+        }
+
+        public void PrintResults()
+        {
+            string tmpIDs = aDictionaryNodes[aStartNode].Id.ToString();
+            string tmpNames = aDictionaryNodes[aStartNode].Name;
+            string tmpPos = aDictionaryNodes[aStartNode].Position.ToString();
+
+            for (int i = 0; i < aBestPopulation.Count; i++)
+            {
+                tmpIDs += " - " + aDictionaryNodes[aBestPopulation[i]].Id;
+                tmpNames += " - " + aDictionaryNodes[aBestPopulation[i]].Name;
+                tmpPos += " - " + aDictionaryNodes[aBestPopulation[i]].Position;
+
+            }
+
+            tmpIDs += " - " + aDictionaryNodes[aStartNode].Id;
+            tmpNames += " - " + aDictionaryNodes[aStartNode].Name;
+            tmpPos += " - " + aDictionaryNodes[aStartNode].Position;
+
+            Debug.WriteLine(@"Best UF: " + aBestPopulationHH);
+            Debug.WriteLine("Route - IDs: " + tmpIDs);
+            Debug.WriteLine("Route - NAMEs: " + tmpNames);
+            Debug.WriteLine("Route - POSITIONs: " + tmpPos);
 
         }
 
@@ -151,9 +238,24 @@ namespace IOA___WinForms.MetaSem
             {
                  List<int> tmpList = Enumerable.Range(1, aSolution.Count).OrderBy(c => rnd.Next()).ToList();
 
+                 tmpList.Remove(aStartNode);
+
                  aPopulation.Add(tmpList);
 
-                 Debug.WriteLine(MetaMain.CalculateRouteCost(tmpList, aDictionaryNodes));
+            }
+        }
+
+        public void AddToElitePopulation(List<int> parPopulation)
+        {
+            double tmpPopulationToAddCost = MetaMain.CalculateRouteCost(parPopulation, aDictionaryNodes);
+            if (!aElitePopulations.ContainsKey(tmpPopulationToAddCost))
+            {
+                aElitePopulations.Add(tmpPopulationToAddCost, parPopulation);
+            }
+
+            if (aElitePopulations.Count == aElitePopulationsSize)
+            {
+                aElitePopulations.RemoveAt(aElitePopulationsSize - 1);
             }
         }
     }

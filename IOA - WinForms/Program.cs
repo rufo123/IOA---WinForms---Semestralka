@@ -21,10 +21,10 @@ namespace ShortestPathIOA
         static void Main(string[] args)
         {
 
-            /* MetaMain tmpMain = new MetaMain();}
+             MetaMain tmpMain = new MetaMain();
 
              return;
-            */
+            
 
             TestovacieSiet tmpTestovacieSiet = new TestovacieSiet();
 

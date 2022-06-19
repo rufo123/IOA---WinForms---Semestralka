@@ -227,7 +227,7 @@ namespace IOA___WinForms.SemestralkaPart1
                     {
                         break;
                     }
-
+                    
                     tmpEndNode = prev[tmpEndNode];
                     tmpFirstRun = false;
                 }
